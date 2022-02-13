@@ -12,6 +12,10 @@
 -- TABLE: Administradores 
 --
 
+DROP DATABASE IF EXISTS obraSocialOspes;
+CREATE DATABASE obraSocialOspes CHARACTER SET utf8mb4;
+USE obraSocialOspes;
+
 CREATE TABLE Administradores(
     idUsuario    INT    NOT NULL,
     PRIMARY KEY (idUsuario)
