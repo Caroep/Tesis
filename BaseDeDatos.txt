@@ -1,0 +1,634 @@
+--
+-- ER/Studio 8.0 SQL Code Generation
+-- Company :      .
+-- Project :      ObraSocialOSPES
+-- Author :       Campoo-Palomo
+--
+-- Date Created : Saturday, February 12, 2022 21:52:24
+-- Target DBMS : MySQL 5.x
+--
+
+-- 
+-- TABLE: Administradores 
+--
+
+CREATE TABLE Administradores(
+    idUsuario    INT    NOT NULL,
+    PRIMARY KEY (idUsuario)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Afiliados 
+--
+
+CREATE TABLE Afiliados(
+    idUsuario       INT        NOT NULL,
+    tipoAfiliado    CHAR(1)    NOT NULL,
+    PRIMARY KEY (idUsuario)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Atenciones 
+--
+
+CREATE TABLE Atenciones(
+    idAtencion         INT         AUTO_INCREMENT,
+    idAfiliado         INT         NOT NULL,
+    idMedicoExterno    INT         NOT NULL,
+    idOrden            INT         NOT NULL,
+    fechaAtencion      DATETIME    NOT NULL,
+    PRIMARY KEY (idAtencion, idAfiliado, idMedicoExterno, idOrden)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Autorizaciones 
+--
+
+CREATE TABLE Autorizaciones(
+    idPrestacion       INT    NOT NULL,
+    idSecretario       INT    NOT NULL,
+    idMedicoInterno    INT    NOT NULL,
+    PRIMARY KEY (idPrestacion, idSecretario, idMedicoInterno)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Entradas 
+--
+
+CREATE TABLE Entradas(
+    idEntrada       INT         AUTO_INCREMENT,
+    idFarmacia      INT         NOT NULL,
+    fechaEntrada    DATETIME,
+    PRIMARY KEY (idEntrada, idFarmacia)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: `Especialidades Medicas` 
+--
+
+CREATE TABLE `Especialidades Medicas`(
+    idEspecialidad        TINYINT        NOT NULL,
+    especialidadMedica    VARCHAR(30)    NOT NULL,
+    PRIMARY KEY (idEspecialidad)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Farmacias 
+--
+
+CREATE TABLE Farmacias(
+    idFarmacia    INT            NOT NULL,
+    farmacia      VARCHAR(60)    NOT NULL,
+    PRIMARY KEY (idFarmacia)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: `Instituciones Medicas` 
+--
+
+CREATE TABLE `Instituciones Medicas`(
+    idInstitucionMedica    INT             NOT NULL,
+    institucionMedica      VARCHAR(120)    NOT NULL,
+    direccion              VARCHAR(140)    NOT NULL,
+    cuil                   VARCHAR(11)     NOT NULL,
+    telefono               VARCHAR(20)     NOT NULL,
+    PRIMARY KEY (idInstitucionMedica)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Libramiento 
+--
+
+CREATE TABLE Libramiento(
+    idLibramiento          INT               NOT NULL,
+    idUsuario              INT               NOT NULL,
+    idFarmacia             INT               NOT NULL,
+    idInstitucionMedica    INT               NOT NULL,
+    pago                   DECIMAL(12, 2)    NOT NULL,
+    PRIMARY KEY (idLibramiento, idUsuario, idFarmacia, idInstitucionMedica)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: LineasEntrada 
+--
+
+CREATE TABLE LineasEntrada(
+    idEntrada         INT               NOT NULL,
+    idFarmacia        INT               NOT NULL,
+    idProducto        INT               NOT NULL,
+    cantidad          INT               NOT NULL,
+    precioUnitario    DECIMAL(12, 2)    NOT NULL,
+    PRIMARY KEY (idEntrada, idFarmacia, idProducto)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: LineasSalida 
+--
+
+CREATE TABLE LineasSalida(
+    idSalida          INT               NOT NULL,
+    idFarmacia        INT               NOT NULL,
+    idProducto        INT               NOT NULL,
+    cantidad          INT               NOT NULL,
+    precioUnitario    DECIMAL(12, 2)    NOT NULL,
+    PRIMARY KEY (idSalida, idFarmacia, idProducto)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Liquidaciones 
+--
+
+CREATE TABLE Liquidaciones(
+    idLiquidacion          INT               NOT NULL,
+    idUsuario              INT               NOT NULL,
+    idFarmacia             INT               NOT NULL,
+    idInstitucionMedica    INT               NOT NULL,
+    prestador              VARCHAR(100)      NOT NULL,
+    importe                DECIMAL(12, 2)    NOT NULL,
+    PRIMARY KEY (idLiquidacion, idUsuario, idFarmacia, idInstitucionMedica)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: `Medicos Externos` 
+--
+
+CREATE TABLE `Medicos Externos`(
+    idUsuario               INT            NOT NULL,
+    matriculaProfesional    VARCHAR(12)    NOT NULL,
+    PRIMARY KEY (idUsuario)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: `Medicos Internos` 
+--
+
+CREATE TABLE `Medicos Internos`(
+    idUsuario               INT            NOT NULL,
+    matriculaProfesional    VARCHAR(12)    NOT NULL,
+    PRIMARY KEY (idUsuario)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Ordenes 
+--
+
+CREATE TABLE Ordenes(
+    idOrden         INT    AUTO_INCREMENT,
+    idAfiliado      INT    NOT NULL,
+    idSecretario    INT    NOT NULL,
+    PRIMARY KEY (idOrden, idAfiliado)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: `Prestaciones Medicas` 
+--
+
+CREATE TABLE `Prestaciones Medicas`(
+    idPrestacion           INT            NOT NULL,
+    idSecretario           INT            NOT NULL,
+    idInstitucionMedica    INT,
+    prestacion             VARCHAR(25)    NOT NULL,
+    numMensual             INT            NOT NULL,
+    estado                 CHAR(1)        NOT NULL,
+    PRIMARY KEY (idPrestacion, idSecretario)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: PrestacionesAfiliado 
+--
+
+CREATE TABLE PrestacionesAfiliado(
+    idPrestacion    INT    NOT NULL,
+    idUsuario       INT    NOT NULL,
+    idSecretario    INT    NOT NULL,
+    PRIMARY KEY (idPrestacion, idUsuario, idSecretario)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Productos 
+--
+
+CREATE TABLE Productos(
+    idProducto    INT             NOT NULL,
+    idRubro       TINYINT         NOT NULL,
+    producto      VARCHAR(120)    NOT NULL,
+    marca         VARCHAR(20)     NOT NULL,
+    PRIMARY KEY (idProducto)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Recetarios 
+--
+
+CREATE TABLE Recetarios(
+    idRecetario    INT               NOT NULL,
+    idFarmacia     INT               NOT NULL,
+    precio         DECIMAL(12, 2)    NOT NULL,
+    descuento      DECIMAL(5, 2)     NOT NULL,
+    idOrden        INT               NOT NULL,
+    idAfiliado     INT               NOT NULL,
+    PRIMARY KEY (idRecetario, idFarmacia)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: RubrosDeProductos 
+--
+
+CREATE TABLE RubrosDeProductos(
+    idRubro    TINYINT        NOT NULL,
+    rubro      VARCHAR(25)    NOT NULL,
+    estado     CHAR(1)        NOT NULL,
+    PRIMARY KEY (idRubro)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Salida 
+--
+
+CREATE TABLE Salida(
+    idSalida       INT         NOT NULL,
+    idFarmacia     INT         NOT NULL,
+    fechaSalida    DATETIME    NOT NULL,
+    PRIMARY KEY (idSalida, idFarmacia)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Secretarios 
+--
+
+CREATE TABLE Secretarios(
+    idUsuario    INT    NOT NULL,
+    PRIMARY KEY (idUsuario)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Tienen 
+--
+
+CREATE TABLE Tienen(
+    idUsuario         INT        NOT NULL,
+    idEspecialidad    TINYINT    NOT NULL,
+    PRIMARY KEY (idUsuario, idEspecialidad)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Usuarios 
+--
+
+CREATE TABLE Usuarios(
+    idUsuario          INT             NOT NULL,
+    nombres            VARCHAR(50)     NOT NULL,
+    apellidos          VARCHAR(50)     NOT NULL,
+    dni                VARCHAR(11)     NOT NULL,
+    fechaNacimiento    DATE            NOT NULL,
+    usuario            VARCHAR(30)     NOT NULL,
+    password           CHAR(32)        NOT NULL,
+    domicilio          VARCHAR(120)    NOT NULL,
+    telefono           VARCHAR(20)     NOT NULL,
+    email              VARCHAR(120)    NOT NULL,
+    estado             CHAR(2)         NOT NULL,
+    PRIMARY KEY (idUsuario)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Administradores 
+--
+
+ALTER TABLE Administradores ADD CONSTRAINT RefUsuarios741 
+    FOREIGN KEY (idUsuario)
+    REFERENCES Usuarios(idUsuario)
+;
+
+
+-- 
+-- TABLE: Afiliados 
+--
+
+ALTER TABLE Afiliados ADD CONSTRAINT RefUsuarios651 
+    FOREIGN KEY (idUsuario)
+    REFERENCES Usuarios(idUsuario)
+;
+
+
+-- 
+-- TABLE: Atenciones 
+--
+
+ALTER TABLE Atenciones ADD CONSTRAINT RefOrdenes1061 
+    FOREIGN KEY (idAfiliado, idOrden)
+    REFERENCES Ordenes(idOrden, idAfiliado)
+;
+
+ALTER TABLE Atenciones ADD CONSTRAINT RefAfiliados211 
+    FOREIGN KEY (idAfiliado)
+    REFERENCES Afiliados(idUsuario)
+;
+
+ALTER TABLE Atenciones ADD CONSTRAINT RefMedicos_Externos221 
+    FOREIGN KEY (idMedicoExterno)
+    REFERENCES `Medicos Externos`(idUsuario)
+;
+
+
+-- 
+-- TABLE: Autorizaciones 
+--
+
+ALTER TABLE Autorizaciones ADD CONSTRAINT RefPrestaciones_Medicas241 
+    FOREIGN KEY (idPrestacion, idSecretario)
+    REFERENCES `Prestaciones Medicas`(idPrestacion, idSecretario)
+;
+
+ALTER TABLE Autorizaciones ADD CONSTRAINT RefMedicos_Internos351 
+    FOREIGN KEY (idMedicoInterno)
+    REFERENCES `Medicos Internos`(idUsuario)
+;
+
+
+-- 
+-- TABLE: Entradas 
+--
+
+ALTER TABLE Entradas ADD CONSTRAINT RefFarmacias711 
+    FOREIGN KEY (idFarmacia)
+    REFERENCES Farmacias(idFarmacia)
+;
+
+
+-- 
+-- TABLE: Libramiento 
+--
+
+ALTER TABLE Libramiento ADD CONSTRAINT RefFarmacias851 
+    FOREIGN KEY (idFarmacia)
+    REFERENCES Farmacias(idFarmacia)
+;
+
+ALTER TABLE Libramiento ADD CONSTRAINT RefInstituciones_Medicas861 
+    FOREIGN KEY (idInstitucionMedica)
+    REFERENCES `Instituciones Medicas`(idInstitucionMedica)
+;
+
+ALTER TABLE Libramiento ADD CONSTRAINT RefMedicos_Externos871 
+    FOREIGN KEY (idUsuario)
+    REFERENCES `Medicos Externos`(idUsuario)
+;
+
+ALTER TABLE Libramiento ADD CONSTRAINT RefSecretarios591 
+    FOREIGN KEY (idUsuario)
+    REFERENCES Secretarios(idUsuario)
+;
+
+
+-- 
+-- TABLE: LineasEntrada 
+--
+
+ALTER TABLE LineasEntrada ADD CONSTRAINT RefEntradas721 
+    FOREIGN KEY (idEntrada, idFarmacia)
+    REFERENCES Entradas(idEntrada, idFarmacia)
+;
+
+ALTER TABLE LineasEntrada ADD CONSTRAINT RefProductos731 
+    FOREIGN KEY (idProducto)
+    REFERENCES Productos(idProducto)
+;
+
+
+-- 
+-- TABLE: LineasSalida 
+--
+
+ALTER TABLE LineasSalida ADD CONSTRAINT RefSalida801 
+    FOREIGN KEY (idSalida, idFarmacia)
+    REFERENCES Salida(idSalida, idFarmacia)
+;
+
+ALTER TABLE LineasSalida ADD CONSTRAINT RefProductos811 
+    FOREIGN KEY (idProducto)
+    REFERENCES Productos(idProducto)
+;
+
+
+-- 
+-- TABLE: Liquidaciones 
+--
+
+ALTER TABLE Liquidaciones ADD CONSTRAINT RefFarmacias821 
+    FOREIGN KEY (idFarmacia)
+    REFERENCES Farmacias(idFarmacia)
+;
+
+ALTER TABLE Liquidaciones ADD CONSTRAINT RefInstituciones_Medicas831 
+    FOREIGN KEY (idInstitucionMedica)
+    REFERENCES `Instituciones Medicas`(idInstitucionMedica)
+;
+
+ALTER TABLE Liquidaciones ADD CONSTRAINT RefMedicos_Externos841 
+    FOREIGN KEY (idUsuario)
+    REFERENCES `Medicos Externos`(idUsuario)
+;
+
+ALTER TABLE Liquidaciones ADD CONSTRAINT RefSecretarios601 
+    FOREIGN KEY (idUsuario)
+    REFERENCES Secretarios(idUsuario)
+;
+
+
+-- 
+-- TABLE: `Medicos Externos` 
+--
+
+ALTER TABLE `Medicos Externos` ADD CONSTRAINT RefUsuarios751 
+    FOREIGN KEY (idUsuario)
+    REFERENCES Usuarios(idUsuario)
+;
+
+
+-- 
+-- TABLE: `Medicos Internos` 
+--
+
+ALTER TABLE `Medicos Internos` ADD CONSTRAINT RefUsuarios771 
+    FOREIGN KEY (idUsuario)
+    REFERENCES Usuarios(idUsuario)
+;
+
+
+-- 
+-- TABLE: Ordenes 
+--
+
+ALTER TABLE Ordenes ADD CONSTRAINT RefSecretarios291 
+    FOREIGN KEY (idSecretario)
+    REFERENCES Secretarios(idUsuario)
+;
+
+ALTER TABLE Ordenes ADD CONSTRAINT RefAfiliados421 
+    FOREIGN KEY (idAfiliado)
+    REFERENCES Afiliados(idUsuario)
+;
+
+
+-- 
+-- TABLE: `Prestaciones Medicas` 
+--
+
+ALTER TABLE `Prestaciones Medicas` ADD CONSTRAINT RefSecretarios361 
+    FOREIGN KEY (idSecretario)
+    REFERENCES Secretarios(idUsuario)
+;
+
+ALTER TABLE `Prestaciones Medicas` ADD CONSTRAINT RefInstituciones_Medicas691 
+    FOREIGN KEY (idInstitucionMedica)
+    REFERENCES `Instituciones Medicas`(idInstitucionMedica)
+;
+
+
+-- 
+-- TABLE: PrestacionesAfiliado 
+--
+
+ALTER TABLE PrestacionesAfiliado ADD CONSTRAINT RefAfiliados371 
+    FOREIGN KEY (idUsuario)
+    REFERENCES Afiliados(idUsuario)
+;
+
+ALTER TABLE PrestacionesAfiliado ADD CONSTRAINT RefPrestaciones_Medicas391 
+    FOREIGN KEY (idPrestacion, idSecretario)
+    REFERENCES `Prestaciones Medicas`(idPrestacion, idSecretario)
+;
+
+
+-- 
+-- TABLE: Productos 
+--
+
+ALTER TABLE Productos ADD CONSTRAINT RefRubrosDeProductos701 
+    FOREIGN KEY (idRubro)
+    REFERENCES RubrosDeProductos(idRubro)
+;
+
+
+-- 
+-- TABLE: Recetarios 
+--
+
+ALTER TABLE Recetarios ADD CONSTRAINT RefOrdenes1041 
+    FOREIGN KEY (idOrden, idAfiliado)
+    REFERENCES Ordenes(idOrden, idAfiliado)
+;
+
+ALTER TABLE Recetarios ADD CONSTRAINT RefFarmacias1051 
+    FOREIGN KEY (idFarmacia)
+    REFERENCES Farmacias(idFarmacia)
+;
+
+
+-- 
+-- TABLE: Salida 
+--
+
+ALTER TABLE Salida ADD CONSTRAINT RefFarmacias791 
+    FOREIGN KEY (idFarmacia)
+    REFERENCES Farmacias(idFarmacia)
+;
+
+
+-- 
+-- TABLE: Secretarios 
+--
+
+ALTER TABLE Secretarios ADD CONSTRAINT RefUsuarios761 
+    FOREIGN KEY (idUsuario)
+    REFERENCES Usuarios(idUsuario)
+;
+
+
+-- 
+-- TABLE: Tienen 
+--
+
+ALTER TABLE Tienen ADD CONSTRAINT RefEspecialidades_Medicas461 
+    FOREIGN KEY (idEspecialidad)
+    REFERENCES `Especialidades Medicas`(idEspecialidad)
+;
+
+ALTER TABLE Tienen ADD CONSTRAINT RefMedicos_Externos471 
+    FOREIGN KEY (idUsuario)
+    REFERENCES `Medicos Externos`(idUsuario)
+;
+
+
